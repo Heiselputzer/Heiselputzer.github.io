@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Supa Dupa Uhr</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            text-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: background-color 0.5s linear;
+        }
+
+        #clock {
+            font-size: clamp(3rem, 15vw, 8rem);
+            font-weight: 800;
+            margin-bottom: 30px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000000;
+            font-weight: bold;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        button:active { 
+            transform: scale(0.95);
+        }
+
+        button:hover { 
+            transform: scale(1.05);
+            background: #fff; 
+        }
+
+        .reset-btn {
+            grid-column: span 2;
+            background: #ff3142;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .reset-btn:hover {
+            background: #ff6b81;
+        }
+
+        .info {
+            margin-top: 20px;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock">00:00:00</div>
+
+    <div class="controls">
+        <button onclick="changeSpeed(2)">Tempo x2</button>
+        <button onclick="changeSpeed(0.5)">Tempo /2</button>
+        <button onclick="modifyTime(60)">+1 Minute</button>
+        <button onclick="modifyTime(-60)">-1 Minute</button>
+        <button class="reset-btn" onclick="resetClock()">Zurücksetzen (Echtzeit)</button>
+    </div>
+
+    <div class="info" id="speed-text">Geschwindigkeit: 1.00x</div>
+
+    <script>
+        let virtualTime = new Date();
+        let speedMultiplier = 1;
+        let lastUpdate = Date.now();
+
+        const clockElement = document.getElementById('clock');
+        const speedText = document.getElementById('speed-text');
+
+        function update() {
+            const now = Date.now();
+            const delta = now - lastUpdate;
+            
+            virtualTime = new Date(virtualTime.getTime() + delta * speedMultiplier);
+            lastUpdate = now;
+
+            render();
+            requestAnimationFrame(update);
+        }
+
+        function render() {
+            const h = String(virtualTime.getHours()).padStart(2, "0");
+            const m = String(virtualTime.getMinutes()).padStart(2, "0");
+            const s = String(virtualTime.getSeconds()).padStart(2, "0");
+            clockElement.innerText = `${h}:${m}:${s}`;
+
+            updateDynamicBackground();
+        }
+
+        function updateDynamicBackground() {
+            const secondsPassed = (virtualTime.getHours() * 3600) + 
+                                  (virtualTime.getMinutes() * 60) + 
+                                  virtualTime.getSeconds();
+            
+            const totalSecondsInDay = 86400;
+            const progress = secondsPassed / totalSecondsInDay;
+
+            let hue, lightness;
+
+            if (progress < 0.25) { 
+                hue = interpolate(240, 20, progress / 0.25);
+                lightness = interpolate(10, 40, progress / 0.25);
+            } else if (progress < 0.5) { 
+                hue = interpolate(20, 200, (progress - 0.25) / 0.25);
+                lightness = interpolate(40, 60, (progress - 0.25) / 0.25);
+            } else if (progress < 0.75) { 
+                hue = interpolate(200, 30, (progress - 0.5) / 0.25);
+                lightness = interpolate(60, 40, (progress - 0.5) / 0.25);
+            } else { 
+                hue = interpolate(30, 240, (progress - 0.75) / 0.25);
+                lightness = interpolate(40, 10, (progress - 0.75) / 0.25);
+            }
+
+            document.body.style.backgroundColor = `hsl(${hue}, 70%, ${lightness}%)`;
+        }
+
+        function interpolate(start, end, factor) {
+            return start + (end - start) * factor;
+        }
+
+        function changeSpeed(factor) {
+            speedMultiplier *= factor;
+            speedText.innerText = `Geschwindigkeit: ${speedMultiplier.toFixed(2)}x`;
+        }
+
+        function modifyTime(seconds) {
+            virtualTime = new Date(virtualTime.getTime() + seconds * 1000);
+        }
+
+        function resetClock() {
+            virtualTime = new Date();
+            speedMultiplier = 1;
+            speedText.innerText = "Geschwindigkeit: 1.00x";
+        }
+
+        requestAnimationFrame(update);
+    </script>
+</body>
+</html>
