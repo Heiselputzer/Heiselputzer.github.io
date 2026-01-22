@@ -85,8 +85,8 @@
     <div class="controls">
         <button onclick="changeSpeed(2)">Tempo x2</button>
         <button onclick="changeSpeed(0.5)">Tempo /2</button>
-        <button onclick="modifyTime(60)">+1 Minute</button>
-        <button onclick="modifyTime(-60)">-1 Minute</button>
+        <button onclick="changeTime(60)">+1 Minute</button>
+        <button onclick="changeTime(-60)">-1 Minute</button>
         <button class="reset-btn" onclick="resetTime()">Zurücksetzen (Echtzeit)</button>
     </div>
 
@@ -131,23 +131,23 @@
             let hue, lightness;
 
             if (progress < 0.25) { 
-                hue = uhr(240, 20, progress / 1);
-                lightness = uhr(10, 40, progress / 1);
+                hue = hintergrund(240, 20, progress / 1);
+                lightness = hintergrund(10, 40, progress / 1);
             } else if (progress < 0.5) { 
-                hue = uhr(20, 200, (progress - 0.25) / 1);
-                lightness = uhr(40, 60, (progress - 0.25) / 1);
+                hue = hintergrund(20, 200, (progress - 0.25) / 1);
+                lightness = hintergrund(40, 60, (progress - 0.25) / 1);
             } else if (progress < 0.75) { 
-                hue = uhr(200, 30, (progress - 0.5) / 1);
-                lightness = uhr(60, 40, (progress - 0.5) / 1);
+                hue = hintergrund(200, 30, (progress - 0.5) / 1);
+                lightness = hintergrund(60, 40, (progress - 0.5) / 1);
             } else { 
-                hue = uhr(30, 240, (progress - 0.75) / 1);
-                lightness = uhr(40, 10, (progress - 0.75) / 1);
+                hue = hintergrund(30, 240, (progress - 0.75) / 1);
+                lightness = hintergrund(40, 10, (progress - 0.75) / 1);
             }
 
             document.body.style.backgroundColor = `hsl(${hue}, 100%, ${lightness}%)`;
         }
 
-        function uhr(start, end, factor) {
+        function hintergrund(start, end, factor) {
             return start + (end - start) * factor;
         }
 
@@ -156,7 +156,7 @@
             speedText.innerText = `Geschwindigkeit: ${speedMultiplier.toFixed(2)}x`;
         }
 
-        function modifyTime(seconds) {
+        function changeTime(seconds) {
             virtualTime = new Date(virtualTime.getTime() + seconds * 1000);
         }
 
@@ -170,3 +170,4 @@
     </script>
 </body>
 </html>
+
