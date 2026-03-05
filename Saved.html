@@ -7,54 +7,84 @@
 
     <style>
 
-        body { 
-            font-family: 'Segoe UI', sans-serif; padding: 20px; 
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; line-height: 1.6; }
+        .eintrag-karte {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
-
-        .eintrag { 
-            border-bottom: 1px solid #ccc; 
-            margin-bottom: 15px; 
-            padding-bottom: 10px; 
+        .farb-kreis {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #000;
+            vertical-align: middle;
         }
-
-        .color-preview { 
-            display: inline-block; 
-            width: 15px; 
-            height: 15px; 
-            border: 1px solid #000; 
-        }
+        .header { border-bottom: 2px solid #333; margin-bottom: 20px; }
 
     </style>
 </head>
 <body>
     <div>Gespeicherte Daten</div>
 
+    <div class="header">
+        <h1>Gespeicherte Formular-Daten</h1>
+    </div>
+
+    <div id="anzeigeBereich">
+        <p>Lade Daten...</p>
+    </div>
+
+    <hr>
+    <p><a href="index.html">← Neues Formular ausfüllen</a></p>
+    <button onclick="loescheAlles()">Alle Daten löschen</button>
+
     <div><a href="/index.html">Formular</a></div>
 
     <script>
-        function Data(){
-
-        const datenAusgabe = localStorage.getItem("formularListe");
-        const listeDiv = document.getElementById("liste");
-
-        if(datenAusgabe) {
-            const alleDaten = JSON.parse(datenAusgabe);
+        function datenAnzeigen() {
+            const container = document.getElementById("anzeigeBereich");
             
-            alleDaten.forEach((eintrag, index) => {
-                const eintragHTML = `
-                    <div class="eintrag">
-                        <h3>Eintrag #${index + 1}</h3>
-                        <p>Name: ${eintrag.fname} ${eintrag.lname}</p>
-                        <p>E-Mail: ${eintrag.email}</p>
-                        <p>Farbe: ${eintrag.color} <span class="color-preview" style="background:${eintrag.color}"></span></p>
-                    </div>
+            const gespeicherteDaten = localStorage.getItem("meineListe");
+
+            if (!gespeicherteDaten) {
+                container.innerHTML = "<p>Keine Daten vorhanden.</p>";
+                return;
+            }
+
+            
+            const datenArray = JSON.parse(gespeicherteDaten);
+            container.innerHTML = ""; 
+
+            datenArray.forEach((user, index) => {
+                const karte = document.createElement("div");
+                karte.className = "eintrag-karte";
+                
+                karte.innerHTML = `
+                    <h3>Eintrag #${index + 1}</h3>
+                    <p><strong>Name:</strong> ${user.fname} ${user.lname}</p>
+                    <p><strong>E-Mail:</strong> ${user.email}</p>
+                    <p><strong>Telefon:</strong> ${user.tel || 'Keine Angabe'}</p>
+                    <p><strong>Lieblingsfarbe:</strong> ${user.color} 
+                       <span class="farb-kreis" style="background-color: ${user.color}"></span>
+                    </p>
                 `;
-                listeDiv.innerHTML += eintragHTML;
+                
+                container.appendChild(karte);
             });
-        } else {
-            listeDiv.innerHTML = "<p>Keine Einträge vorhanden.</p>";
         }
+
+        function loescheAlles() {
+            if(confirm("Wirklich alle Daten löschen?")) {
+                localStorage.removeItem("meineListe");
+                location.reload();
+            }
         }
+
+        window.onload = datenAnzeigen;
         
     </script>
 </body>
