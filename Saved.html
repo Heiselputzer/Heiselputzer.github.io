@@ -7,31 +7,31 @@
 
     <style>
 
-        body { font-family: 'Segoe UI', sans-serif; padding: 20px; line-height: 1.6; }
-        .eintrag-karte {
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            padding: 20px;  
+        }
+
+        .Ausgabe {
             background: #f9f9f9;
-            border: 1px solid #ddd;
+            color: #000;
+            border: 1px solid #000000;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 10vw;
             border-radius: 5px;
+            align-items: center;
         }
-        .farb-kreis {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            border: 1px solid #000;
-            vertical-align: middle;
+
+        .header { 
+            margin-bottom: 20vw; 
         }
-        .header { border-bottom: 2px solid #333; margin-bottom: 20px; }
 
     </style>
 </head>
 <body>
-    <div>Gespeicherte Daten</div>
 
     <div class="header">
-        <h1>Gespeicherte Formular-Daten</h1>
+        <h1>Deine Daten</h1>
     </div>
 
     <div id="anzeigeBereich">
@@ -39,8 +39,7 @@
     </div>
 
     <hr>
-    <p><a href="index.html">← Neues Formular ausfüllen</a></p>
-    <button onclick="loescheAlles()">Alle Daten löschen</button>
+    <button onclick="löscheAlles()">Alle Daten löschen</button>
 
     <div><a href="/index.html">Formular</a></div>
 
@@ -61,23 +60,21 @@
 
             datenArray.forEach((user, index) => {
                 const karte = document.createElement("div");
-                karte.className = "eintrag-karte";
+                karte.className = "Ausgabe";
                 
                 karte.innerHTML = `
                     <h3>Eintrag #${index + 1}</h3>
                     <p><strong>Name:</strong> ${user.fname} ${user.lname}</p>
                     <p><strong>E-Mail:</strong> ${user.email}</p>
                     <p><strong>Telefon:</strong> ${user.tel || 'Keine Angabe'}</p>
-                    <p><strong>Lieblingsfarbe:</strong> ${user.color} 
-                       <span class="farb-kreis" style="background-color: ${user.color}"></span>
-                    </p>
+                    <p><strong>Lieblingsfarbe:</strong> ${user.color} </p>
                 `;
                 
                 container.appendChild(karte);
             });
         }
 
-        function loescheAlles() {
+        function löscheAlles() {
             if(confirm("Wirklich alle Daten löschen?")) {
                 localStorage.removeItem("meineListe");
                 location.reload();
