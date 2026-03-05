@@ -23,7 +23,7 @@
         }
 
         .header { 
-            margin-bottom: 20vw; 
+            margin-bottom: 20px; 
         }
 
     </style>
@@ -50,7 +50,7 @@
             const gespeicherteDaten = localStorage.getItem("meineListe");
 
             if (!gespeicherteDaten) {
-                container.innerHTML = "<p>Keine Daten vorhanden.</p>";
+                container.innerHTML = "<p>Keine Daten vorhanden</p>";
                 return;
             }
 
@@ -59,10 +59,10 @@
             container.innerHTML = ""; 
 
             datenArray.forEach((user, index) => {
-                const karte = document.createElement("div");
-                karte.className = "Ausgabe";
+                const ausgabeFeld = document.createElement("div");
+                ausgabeFeld.className = "Ausgabe";
                 
-                karte.innerHTML = `
+                ausgabeFeld.innerHTML = `
                     <h3>Eintrag #${index + 1}</h3>
                     <p><strong>Name:</strong> ${user.fname} ${user.lname}</p>
                     <p><strong>E-Mail:</strong> ${user.email}</p>
@@ -70,8 +70,9 @@
                     <p><strong>Lieblingsfarbe:</strong> ${user.color} </p>
                 `;
                 
-                container.appendChild(karte);
+                container.appendChild(ausgabeFeld);
             });
+
         }
 
         function löscheAlles() {
