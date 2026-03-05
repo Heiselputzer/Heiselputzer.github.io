@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; padding: 20px; 
+        }
+
+        .eintrag { 
+            border-bottom: 1px solid #ccc; 
+            margin-bottom: 15px; 
+            padding-bottom: 10px; 
+        }
+
+        .color-preview { 
+            display: inline-block; 
+            width: 15px; 
+            height: 15px; 
+            border: 1px solid #000; 
+        }
+
+    </style>
+</head>
+<body>
+    <div>Gespeicherte Daten</div>
+
+    <div><a href="/Formular.html">Formular</a></div>
+
+    <script>
+        function Data(){
+
+        const datenAusgabe = localStorage.getItem("formularListe");
+        const listeDiv = document.getElementById("liste");
+
+        if(datenAusgabe) {
+            const alleDaten = JSON.parse(datenAusgabe);
+            
+            alleDaten.forEach((eintrag, index) => {
+                const eintragHTML = `
+                    <div class="eintrag">
+                        <h3>Eintrag #${index + 1}</h3>
+                        <p>Name: ${eintrag.fname} ${eintrag.lname}</p>
+                        <p>E-Mail: ${eintrag.email}</p>
+                        <p>Farbe: ${eintrag.color} <span class="color-preview" style="background:${eintrag.color}"></span></p>
+                    </div>
+                `;
+                listeDiv.innerHTML += eintragHTML;
+            });
+        } else {
+            listeDiv.innerHTML = "<p>Keine Einträge vorhanden.</p>";
+        }
+        }
+        
+    </script>
+</body>
+</html>
